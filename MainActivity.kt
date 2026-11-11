@@ -36,82 +36,183 @@ class MainActivity : ComponentActivity() {
     private var playingTitle by mutableStateOf("هنوز آهنگی انتخاب نشده")
     private var isPlaying by mutableStateOf(false)
 
-    private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-        if (it) loadSongs()
-    }
+    private val permissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) loadSongs()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         player = ExoPlayer.Builder(this).build()
-        val permission = if (Build.VERSION.SDK_INT >= 33) Manifest.permission.READ_MEDIA_AUDIO
-                         else Manifest.permission.READ_EXTERNAL_STORAGE
-        if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) loadSongs()
-        else permissionLauncher.launch(permission)
+
+        val permission = if (Build.VERSION.SDK_INT >= 33) {
+            Manifest.permission.READ_MEDIA_AUDIO
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+
+        if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
+            loadSongs()
+        } else {
+            permissionLauncher.launch(permission)
+        }
 
         setContent {
             val navy = Color(0xFF080D1D)
             val purple = Color(0xFF7655E8)
-            MaterialTheme(colorScheme = darkColorScheme(primary = purple, background = navy, surface = Color(0xFF151D34))) {
+
+            MaterialTheme(
+                colorScheme = darkColorScheme(
+                    primary = purple,
+                    background = navy,
+                    surface = Color(0xFF151D34)
+                )
+            ) {
                 Column(
                     Modifier.fillMaxSize()
-                        .background(Brush.verticalGradient(listOf(navy, Color(0xFF171331))))
+                        .background(
+                            Brush.verticalGradient(
+                                listOf(navy, Color(0xFF171331))
+                            )
+                        )
                         .padding(18.dp)
                 ) {
-                    Text("SEPHER", style = MaterialTheme.typography.headlineLarge, color = Color.White,
-                        fontWeight = FontWeight.Black)
-                    Text("MUSIC PLAYER", color = Color(0xFFB9A9FF), style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        "SEPHER",
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = Color.White,
+                        fontWeight = FontWeight.Black
+                    )
+                    Text(
+                        "MUSIC PLAYER",
+                        color = Color(0xFFB9A9FF),
+                        style = MaterialTheme.typography.titleMedium
+                    )
                     Spacer(Modifier.height(18.dp))
-                    Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF1B2440)),
-                        shape = RoundedCornerShape(22.dp)) {
-                        Column(Modifier.fillMaxWidth().padding(18.dp)) {
+
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color(0xFF1B2440)
+                        ),
+                        shape = RoundedCornerShape(22.dp)
+                    ) {
+                        Column(
+                            Modifier.fillMaxWidth().padding(18.dp)
+                        ) {
                             Text("در حال پخش", color = Color(0xFFB9A9FF))
                             Spacer(Modifier.height(8.dp))
-                            Text(playingTitle, color = Color.White, style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold)
-                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically) {
-                                IconButton(onClick = { if (player.hasPreviousMediaItem()) player.seekToPreviousMediaItem() }) {
-                                    Icon(Icons.Default.SkipPrevious, null, tint = Color.White)
+                            Text(
+                                playingTitle,
+                                color = Color.White,
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                IconButton(
+                                    onClick = {
+                                        if (player.hasPreviousMediaItem()) {
+                                            player.seekToPreviousMediaItem()
+                                        }
+                                    }
+                                ) {
+                                    Icon(
+                                        Icons.Default.SkipPrevious,
+                                        null,
+                                        tint = Color.White
+                                    )
                                 }
-                                IconButton(onClick = {
-                                    if (player.isPlaying) player.pause() else player.play()
-                                    isPlaying = player.isPlaying
-                                }) {
-                                    Icon(if (isPlaying) Icons.Default.PauseCircle else Icons.Default.PlayCircle, null,
-                                        tint = Color(0xFFB9A9FF), modifier = Modifier.size(54.dp))
+                                IconButton(
+                                    onClick = {
+                                        if (player.isPlaying) player.pause() else player.play()
+                                        isPlaying = player.isPlaying
+                                    }
+                                ) {
+                                    Icon(
+                                        if (isPlaying) Icons.Default.PauseCircle
+                                        else Icons.Default.PlayCircle,
+                                        null,
+                                        tint = Color(0xFFB9A9FF),
+                                        modifier = Modifier.size(54.dp)
+                                    )
                                 }
-                                IconButton(onClick = { if (player.hasNextMediaItem()) player.seekToNextMediaItem() }) {
-                                    Icon(Icons.Default.SkipNext, null, tint = Color.White)
+                                IconButton(
+                                    onClick = {
+                                        if (player.hasNextMediaItem()) {
+                                            player.seekToNextMediaItem()
+                                        }
+                                    }
+                                ) {
+                                    Icon(
+                                        Icons.Default.SkipNext,
+                                        null,
+                                        tint = Color.White
+                                    )
                                 }
                             }
                         }
                     }
+
                     Spacer(Modifier.height(18.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("کتابخانه موسیقی", color = Color.White, style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold)
+                        Text(
+                            "کتابخانه موسیقی",
+                            color = Color.White,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold
+                        )
                         Spacer(Modifier.weight(1f))
                         Text("${songs.size} آهنگ", color = Color.LightGray)
                     }
                     Spacer(Modifier.height(8.dp))
+
                     if (songs.isEmpty()) {
-                        Text("اگر آهنگی در گوشی وجود دارد، مجوز دسترسی به فایل‌های صوتی را فعال کنید.",
-                            color = Color.LightGray)
+                        Text(
+                            "اگر آهنگی در گوشی وجود دارد، مجوز دسترسی به فایل‌های صوتی را فعال کنید.",
+                            color = Color.LightGray
+                        )
                     } else {
-                        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
                             items(songs) { song ->
-                                Card(Modifier.fillMaxWidth().clickable { playSong(song) },
-                                    colors = CardDefaults.cardColors(containerColor = Color(0xFF151D34))) {
-                                    Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(Icons.Default.MusicNote, null, tint = Color(0xFFB9A9FF),
-                                            modifier = Modifier.size(30.dp))
+                                Card(
+                                    Modifier.fillMaxWidth().clickable { playSong(song) },
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = Color(0xFF151D34)
+                                    )
+                                ) {
+                                    Row(
+                                        Modifier.padding(14.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            Icons.Default.MusicNote,
+                                            null,
+                                            tint = Color(0xFFB9A9FF),
+                                            modifier = Modifier.size(30.dp)
+                                        )
                                         Spacer(Modifier.width(12.dp))
                                         Column(Modifier.weight(1f)) {
-                                            Text(song.title, color = Color.White, fontWeight = FontWeight.SemiBold)
-                                            Text(song.artist, color = Color.LightGray,
-                                                style = MaterialTheme.typography.bodySmall)
+                                            Text(
+                                                song.title,
+                                                color = Color.White,
+                                                fontWeight = FontWeight.SemiBold
+                                            )
+                                            Text(
+                                                song.artist,
+                                                color = Color.LightGray,
+                                                style = MaterialTheme.typography.bodySmall
+                                            )
                                         }
-                                        Icon(Icons.Default.PlayArrow, null, tint = Color.White)
+                                        Icon(
+                                            Icons.Default.PlayArrow,
+                                            null,
+                                            tint = Color.White
+                                        )
                                     }
                                 }
                             }
@@ -124,20 +225,35 @@ class MainActivity : ComponentActivity() {
 
     private fun loadSongs() {
         val collection = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-        val projection = arrayOf(MediaStore.Audio.Media._ID, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST)
+        val projection = arrayOf(
+            MediaStore.Audio.Media._ID,
+            MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.ARTIST
+        )
         val found = mutableListOf<Song>()
-        contentResolver.query(collection, projection, "${MediaStore.Audio.Media.IS_MUSIC} != 0",
-            null, MediaStore.Audio.Media.TITLE + " ASC")?.use { cursor ->
+
+        contentResolver.query(
+            collection,
+            projection,
+            "${MediaStore.Audio.Media.IS_MUSIC} != 0",
+            null,
+            MediaStore.Audio.Media.TITLE + " ASC"
+        )?.use { cursor ->
             val idCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
             val titleCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
             val artistCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
+
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(idCol)
-                found += Song(id, cursor.getString(titleCol) ?: "ناشناخته",
+                found += Song(
+                    id,
+                    cursor.getString(titleCol) ?: "ناشناخته",
                     cursor.getString(artistCol) ?: "هنرمند ناشناخته",
-                    Uri.withAppendedPath(collection, id.toString()))
+                    Uri.withAppendedPath(collection, id.toString())
+                )
             }
         }
+
         songs = found
         player.clearMediaItems()
         player.setMediaItems(found.map { MediaItem.fromUri(it.uri) })

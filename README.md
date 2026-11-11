@@ -1,16 +1,19 @@
 # SEPHER MUSIC PLAYER
 
-پروژهٔ اندرویدی پخش موسیقی آفلاین با Kotlin، Jetpack Compose و AndroidX Media3.
+A starter Android music player project built with Kotlin, Jetpack Compose and AndroidX Media3.
 
-## امکانات پیاده‌سازی‌شده در نسخهٔ آغازین
-- شناسایی فایل‌های صوتی محلی از حافظهٔ گوشی
-- نمایش نام آهنگ و خواننده
-- پخش با موتور Media3
-- کنترل قبلی، پخش/مکث و بعدی
-- رابط تیره با رنگ‌های سرمه‌ای و بنفش
+## Current functionality
+- Reads local audio files through MediaStore after permission is granted.
+- Displays a basic music library.
+- Plays selected tracks using AndroidX Media3 ExoPlayer.
+- Provides basic previous, play/pause and next controls.
+- Persian labels and a dark navy/purple interface.
 
-## مواردی که هنوز پیاده‌سازی نشده‌اند
-استودیوی DJ دو‌دک واقعی، کراس‌فیدر و میکس هم‌زمان، اکولایزر و افکت‌های صوتی واقعی، متن آهنگ، انتخاب پوشهٔ کارت حافظه، ویجت، Chromecast، پشتیبان‌گیری و ترجمهٔ کامل دوزبانه هنوز در این نسخه وجود ندارند و باید جداگانه توسعه و آزمایش شوند.
+## Build APK with GitHub Actions
+1. Upload the contents of this project folder to the root of your GitHub repository.
+2. Open the **Actions** tab.
+3. Select **Build Android APK** and press **Run workflow** (or push a commit to `main`).
+4. When the workflow finishes successfully, open its run and download the artifact named `SEPHER-MUSIC-PLAYER-APK`.
+5. The APK is inside the downloaded artifact as `app-debug.apk`.
 
-## ساخت
-با Android Studio پروژه را باز کنید و نسخهٔ Debug را بسازید؛ یا گردش‌کار GitHub Actions را اجرا کنید.
+This is a starter version, not the full DJ Studio feature set. Advanced EQ, DJ decks, BPM analysis, lyrics, widgets, Chromecast and other planned features are not implemented yet.
